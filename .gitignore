@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.tools/
+.node-portable.zip
+dev-server*.log
+lan-server*.log
+test-results/
+playwright-report/
+visual-check.png
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+playwright.config.js
+playwright.config.d.ts
