@@ -1,8 +1,18 @@
-# Trạm Micro:bit – Bài tập về nhà
+# Micro:bit Mission Lab
 
-Ứng dụng React + TypeScript + Vite chạy hoàn toàn ở phía trình duyệt. Không có backend, tài khoản, API dữ liệu hay database.
+An English, browser-only homework site built with React, TypeScript, and Vite. It has no backend, account system, data API, or database. Each lesson gets a stable hash URL that works on GitHub Pages, for example `#/lesson/buttons-led-v1`.
 
-## Chạy local
+## Project structure
+
+- `src/data/course.ts`: mission-library cards and availability.
+- `src/data/lesson.ts`: complete content, answers, explanations, and weights for the published sample lesson.
+- `src/logic/grading.ts`: deterministic grading, separate from the UI.
+- `src/logic/storage.ts`: per-lesson attempts in browser `localStorage`.
+- `.github/workflows/deploy-pages.yml`: automatic GitHub Pages build and deployment.
+
+To add another complete lesson, create its lesson data file, register it in `lessonsById` in `src/App.tsx`, and mark its catalog entry as `available` in `src/data/course.ts`.
+
+## Run locally
 
 ```powershell
 $nodeDir = (Resolve-Path '.tools\node-v24.21.0-win-x64').Path
@@ -10,11 +20,9 @@ $env:Path = "$nodeDir;$env:Path"
 npm run dev
 ```
 
-Mở `http://127.0.0.1:5173`.
+Open `http://127.0.0.1:5173`.
 
-## Cho máy khác trong cùng Wi-Fi truy cập
-
-Máy đang chứa dự án chạy lệnh sau và cần được giữ bật:
+## Share on the same Wi-Fi
 
 ```powershell
 $nodeDir = (Resolve-Path '.tools\node-v24.21.0-win-x64').Path
@@ -22,11 +30,9 @@ $env:Path = "$nodeDir;$env:Path"
 npm run dev:lan
 ```
 
-Máy còn lại không cần cài công cụ build; chỉ mở địa chỉ `http://<IP-máy-chủ>:5173` bằng trình duyệt. Hai máy phải ở cùng mạng và Windows Firewall phải cho phép kết nối Private network tới Node.js/cổng 5173.
+Other devices need only a browser. Open the Network URL printed by Vite. Alternatively, copy the complete folder (including `.tools` and `node_modules`) to another Windows computer and double-click `START_WEBSITE.cmd`.
 
-Nếu chép dự án sang một máy Windows không có Node/npm, hãy chép **nguyên thư mục** (gồm `.tools` và `node_modules`) rồi nhấp đúp `START_WEBSITE.cmd`. Không cần cài đặt thêm.
-
-## Kiểm tra
+## Test and build
 
 ```powershell
 $nodeDir = (Resolve-Path '.tools\node-v24.21.0-win-x64').Path
@@ -36,11 +42,15 @@ npm run build
 npm run test:e2e
 ```
 
-Node LTS portable đã được đặt trong `.tools` vì máy hiện không có Node trong `PATH`. Dependencies cũng đã được cài sẵn; chỉ cần chạy lại `npm install` khi `package.json` thay đổi.
+MakeCode uses Microsoft’s supported iframe controller and requires Internet. A new-tab fallback is always provided.
 
-MakeCode được nhúng bằng iframe controller chính thức của PXT và cần Internet. Nếu mạng hoặc chính sách trình duyệt chặn iframe, dùng nút mở MakeCode ở tab mới.
+## Deploy automatically to GitHub Pages
 
-## Tự động đăng lên GitHub Pages
+1. Push the repository to the `main` branch on GitHub.
+2. Open **Settings → Pages**.
+3. Under **Build and deployment**, select **GitHub Actions** as the source.
+4. Open **Actions** and run **Build and deploy GitHub Pages**, or push a new commit.
+5. The course URL will be `https://YOUR-USER.github.io/YOUR-REPOSITORY/`.
+6. A direct lesson link will be `https://YOUR-USER.github.io/YOUR-REPOSITORY/#/lesson/buttons-led-v1`.
 
-Workflow `.github/workflows/deploy-pages.yml` sẽ tự test, build và cập nhật Pages sau mỗi lần push lên nhánh `main`. Trong repository GitHub, vào **Settings → Pages → Build and deployment → Source** và chọn **GitHub Actions**. Link mặc định có dạng `https://TEN-TAI-KHOAN.github.io/TEN-REPOSITORY/`.
-# testHomework
+Every push to `main` runs unit tests, builds the site, and deploys `dist`. Do not create the suggested Jekyll or Static HTML workflow; this repository already contains the correct Vite workflow.

@@ -71,6 +71,20 @@ export interface Lesson {
   practice: { title: string; brief: string; checklist: string[]; starterCode: string }
 }
 
+export interface LessonCatalogItem {
+  id: string
+  number: number
+  title: string
+  subtitle: string
+  description: string
+  duration: string
+  difficulty: 'Starter' | 'Explorer' | 'Challenge'
+  icon: string
+  color: string
+  status: 'available' | 'coming-soon'
+  tags: string[]
+}
+
 export interface AttemptState {
   attemptId: string
   lessonId: string
