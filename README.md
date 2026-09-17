@@ -53,4 +53,6 @@ MakeCode uses Microsoft’s supported iframe controller and requires Internet. A
 5. The course URL will be `https://YOUR-USER.github.io/YOUR-REPOSITORY/`.
 6. A direct lesson link will be `https://YOUR-USER.github.io/YOUR-REPOSITORY/#/lesson/buttons-led-v1`.
 
+Lesson 7 has the stable direct link `https://YOUR-USER.github.io/YOUR-REPOSITORY/#/lesson/trex-fossil-v1`.
+
 Every push to `main` runs unit tests, builds the site, and deploys `dist`. Do not create the suggested Jekyll or Static HTML workflow; this repository already contains the correct Vite workflow.

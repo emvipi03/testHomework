@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { lesson } from '../data/lesson'
+import { trexFossilLesson } from '../data/trexFossilLesson'
 import { gradeLesson, isCorrect } from './grading'
 
 describe('grading', () => {
@@ -13,5 +14,10 @@ describe('grading', () => {
     const order = lesson.questions.find((q) => q.type === 'order')!
     expect(isCorrect(match, { 'show-heart': 'f-heart' })).toBe(false)
     expect(isCorrect(order, [...order.correct].reverse())).toBe(false)
+  })
+  it('grades all five T-Rex & Fossil questions by their configured weights', () => {
+    const answers = Object.fromEntries(trexFossilLesson.questions.map((question) => [question.id, question.correct]))
+    expect(trexFossilLesson.questions).toHaveLength(5)
+    expect(gradeLesson(trexFossilLesson, answers)).toMatchObject({ score: 10, maxScore: 10, percentage: 100 })
   })
 })

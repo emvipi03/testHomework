@@ -15,7 +15,8 @@ export interface ReviewCardData {
   title: string
   body: string
   tip: string
-  illustration: 'buttons' | 'led'
+  illustration?: 'buttons' | 'led'
+  image?: { src: string; alt: string }
 }
 
 export interface ChoiceQuestion {
@@ -69,6 +70,7 @@ export interface Lesson {
   reviews: ReviewCardData[]
   questions: Question[]
   practice: { title: string; brief: string; checklist: string[]; starterCode: string }
+  hero?: { kicker: string; lines: [string, string, string]; description: string; image: string; imageAlt: string }
 }
 
 export interface LessonCatalogItem {

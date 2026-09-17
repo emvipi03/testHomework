@@ -7,7 +7,7 @@ export function ReviewCards({ cards, onDone }: { cards: ReviewCardData[]; onDone
       <div className="section-heading"><span className="kicker">Power up your knowledge</span><h1>Quick review before launch</h1><p>Read both cards below. The answers are still safely hidden!</p></div>
       <div className="review-grid">{cards.map((card) => <article className="review-card" key={card.id}>
         <div><span className="eyebrow">{card.eyebrow}</span><h2>{card.title}</h2><p>{card.body}</p><aside><b>Memory tip</b><span>{card.tip}</span></aside></div>
-        <MicrobitIllustration type={card.illustration} />
+        {card.image ? <img className="review-image" src={card.image.src} alt={card.image.alt} /> : card.illustration ? <MicrobitIllustration type={card.illustration} /> : null}
       </article>)}</div>
       <div className="actions end"><button className="primary" onClick={onDone}>I’m ready <span>→</span></button></div>
     </section>

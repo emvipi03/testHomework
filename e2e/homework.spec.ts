@@ -16,11 +16,26 @@ test('shows the branded mission library and a stable lesson link', async ({ page
   await expect(page.getByRole('heading', { name: 'Pick your next challenge' })).toBeVisible()
   await expect(page.getByAltText('Bricks 4 Kidz')).toBeVisible()
   await expect(page.getByAltText('LogicLab')).toBeVisible()
-  await expect(page.locator('.lesson-card')).toHaveCount(4)
+  await expect(page.locator('.lesson-card')).toHaveCount(5)
   await expect(page.getByText('Coming soon')).toHaveCount(3)
   await openLesson(page)
   await page.reload()
   await expect(page.getByLabel('Inventor name')).toBeVisible()
+})
+
+test('opens lesson 7 with five questions and the fossil coding challenge', async ({ page }) => {
+  await page.getByRole('link', { name: /T-Rex & Fossil/ }).click()
+  await expect(page).toHaveURL(/#\/lesson\/trex-fossil-v1$/)
+  await expect(page.getByText('Mission 07 · T-Rex & Fossil')).toBeVisible()
+  await expect(page.getByAltText(/Completed T-Rex and fossil excavation model/)).toBeVisible()
+  await page.getByLabel('Inventor name').fill('Riley')
+  await page.getByRole('button', { name: /Start mission/ }).click()
+  await expect(page.getByAltText(/T-Rex leg linkage assembly/)).toBeVisible()
+  await page.getByRole('button', { name: /I’m ready/ }).click()
+  await expect(page.locator('.question-card')).toHaveCount(5)
+  await expect(page.getByText('Complete all 5 questions')).toBeVisible()
+  await page.getByRole('button', { name: /Enter the coding lab/ }).click()
+  await expect(page.getByRole('heading', { name: /Fossil Hunt Counter/ })).toBeVisible()
 })
 
 test('validates name, persists progress, submits weighted answers and retries', async ({ page }) => {

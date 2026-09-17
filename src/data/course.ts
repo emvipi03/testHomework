@@ -17,4 +17,8 @@ export const courseLessons: LessonCatalogItem[] = [
     id: 'radio-messages-v1', number: 4, title: 'Radio Messages', subtitle: 'Send a signal to a friend',
     description: 'Discover wireless messages and make two micro:bits communicate.', duration: '30 min', difficulty: 'Challenge', icon: '⌁', color: '#1688d4', status: 'coming-soon', tags: ['Radio', 'Events'],
   },
+  {
+    id: 'trex-fossil-v1', number: 7, title: 'T-Rex & Fossil', subtitle: 'Build, discuss, and code a fossil hunt',
+    description: 'Explore the T-Rex excavation model, reason about its moving linkage, and program a micro:bit fossil counter.', duration: '25–30 min', difficulty: 'Explorer', icon: '🦖', color: '#e56b2f', status: 'available', tags: ['Discussion', 'Variables'],
+  },
 ]

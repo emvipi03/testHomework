@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { lesson } from './data/lesson'
+import { trexFossilLesson } from './data/trexFossilLesson'
 import { courseLessons } from './data/course'
 import { gradeLesson } from './logic/grading'
 import { clearAttempt, downloadJson, loadAttempt, makeAttemptId, saveAttempt } from './logic/storage'
@@ -11,7 +12,7 @@ import { Quiz } from './components/Quiz'
 import { Practice } from './components/Practice'
 import { Results } from './components/Results'
 
-const lessonsById: Record<string, Lesson> = { [lesson.id]: lesson }
+const lessonsById: Record<string, Lesson> = { [lesson.id]: lesson, [trexFossilLesson.id]: trexFossilLesson }
 const lessonIdFromHash = () => window.location.hash.match(/^#\/lesson\/([^/?]+)/)?.[1]
 const newState = (lessonId: string): AttemptState => ({ attemptId: makeAttemptId(), lessonId, studentName: '', stage: 'welcome', answers: {}, startedAt: new Date().toISOString(), practiceVisited: false })
 
@@ -19,6 +20,7 @@ export default function App() {
   const [route, setRoute] = useState(window.location.hash)
   const requestedLessonId = lessonIdFromHash()
   const activeLesson = requestedLessonId ? lessonsById[requestedLessonId] : undefined
+  const catalogItem = activeLesson ? courseLessons.find((item) => item.id === activeLesson.id) : undefined
   const initialLessonId = activeLesson?.id ?? lesson.id
   const [state, setState] = useState<AttemptState>(() => loadAttempt(initialLessonId) ?? newState(initialLessonId))
   const [name, setName] = useState(state.studentName)
@@ -67,10 +69,10 @@ export default function App() {
   if (!activeLesson) return <CourseCatalog key={route} lessons={courseLessons} getProgress={progressFor} />
 
   return <div className="app"><ProgressHeader stage={state.stage} name={state.studentName} onClear={clear} onHome={goHome} /><main id="main">
-    {state.stage === 'welcome' && <section className="welcome"><div className="hero-copy"><button className="back-link" onClick={goHome}>← All missions</button><span className="kicker">Mission 01 · micro:bit</span><h1>Press a button.<br /><em>Light it up.</em><br />Launch an idea!</h1><p>Review the essentials, solve 6 block challenges, and build a real program in Microsoft MakeCode.</p><div className="mission-title"><span>Today’s mission</span><b>{activeLesson.title}</b></div><form onSubmit={start} noValidate><label htmlFor="student-name">Inventor name</label><div className="name-row"><input id="student-name" value={name} onChange={(event) => { setName(event.target.value); setNameError('') }} placeholder="For example: Alex" maxLength={40} aria-invalid={!!nameError} aria-describedby="name-error" autoFocus /><button className="primary">Start mission <span>→</span></button></div><p className="form-error" id="name-error" role="alert">{nameError}</p><small>Progress is saved in this browser. No account needed.</small></form></div><div className="hero-board" aria-hidden="true"><div className="orbit one">A</div><div className="orbit two">B</div><div className="pixel-heart">{Array.from({ length: 25 }, (_, i) => <i key={i} className={[1,3,5,7,9,10,14,16,18,22].includes(i) ? 'on' : ''} />)}</div><div className="wire-block purple">show icon <b>♥</b></div><div className="wire-block blue">on button <b>A</b> pressed</div></div></section>}
+    {state.stage === 'welcome' && <section className="welcome"><div className="hero-copy"><button className="back-link" onClick={goHome}>← All missions</button><span className="kicker">{activeLesson.hero?.kicker ?? `Mission ${String(catalogItem?.number ?? 1).padStart(2, '0')} · micro:bit`}</span><h1>{activeLesson.hero ? <>{activeLesson.hero.lines[0]}<br /><em>{activeLesson.hero.lines[1]}</em><br />{activeLesson.hero.lines[2]}</> : <>Press a button.<br /><em>Light it up.</em><br />Launch an idea!</>}</h1><p>{activeLesson.hero?.description ?? `Review the essentials, solve ${activeLesson.questions.length} block challenges, and build a real program in Microsoft MakeCode.`}</p><div className="mission-title"><span>Today’s mission</span><b>{activeLesson.title}</b></div><form onSubmit={start} noValidate><label htmlFor="student-name">Inventor name</label><div className="name-row"><input id="student-name" value={name} onChange={(event) => { setName(event.target.value); setNameError('') }} placeholder="For example: Alex" maxLength={40} aria-invalid={!!nameError} aria-describedby="name-error" autoFocus /><button className="primary">Start mission <span>→</span></button></div><p className="form-error" id="name-error" role="alert">{nameError}</p><small>Progress is saved in this browser. No account needed.</small></form></div>{activeLesson.hero ? <div className="hero-board model-hero"><img src={activeLesson.hero.image} alt={activeLesson.hero.imageAlt} /></div> : <div className="hero-board" aria-hidden="true"><div className="orbit one">A</div><div className="orbit two">B</div><div className="pixel-heart">{Array.from({ length: 25 }, (_, i) => <i key={i} className={[1,3,5,7,9,10,14,16,18,22].includes(i) ? 'on' : ''} />)}</div><div className="wire-block purple">show icon <b>♥</b></div><div className="wire-block blue">on button <b>A</b> pressed</div></div>}</section>}
     {state.stage === 'review' && <ReviewCards cards={activeLesson.reviews} onDone={() => go('quiz')} />}
     {state.stage === 'quiz' && <Quiz lesson={activeLesson} answers={state.answers} setAnswer={(id, answer: Answer) => setState((current) => ({ ...current, answers: { ...current.answers, [id]: answer } }))} onNext={() => go('practice')} />}
-    {state.stage === 'practice' && <Practice brief={activeLesson.practice.brief} checklist={activeLesson.practice.checklist} starterCode={activeLesson.practice.starterCode} onBack={() => go('quiz')} onSubmit={submit} />}
+    {state.stage === 'practice' && <Practice title={activeLesson.practice.title} brief={activeLesson.practice.brief} checklist={activeLesson.practice.checklist} starterCode={activeLesson.practice.starterCode} onBack={() => go('quiz')} onSubmit={submit} />}
     {state.stage === 'result' && <Results lesson={activeLesson} answers={state.answers} grade={grade} attemptId={state.attemptId} onRetry={retry} onExport={exportResult} />}
   </main><footer><span>Bricks 4 Kidz Vietnam · LogicLab</span><span>Learning by building</span></footer></div>
 }
